@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${roboto.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
         <Navbar />
-        <main className="flex-grow pt-[112px] xl:pt-[112px] pt-[72px]">
+        <main className="flex-grow">
           {children}
         </main>
         <Footer />

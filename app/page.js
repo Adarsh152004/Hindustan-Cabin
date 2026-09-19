@@ -8,7 +8,7 @@ import About from '../component/About';
 
 export default function Home() {
   return (
-    <div className="-mt-[72px] xl:-mt-[112px]">
+    <div>
       <Slider/>
       <ProductShowcase/>
       <About/>
