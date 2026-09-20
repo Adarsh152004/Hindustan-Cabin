@@ -75,7 +75,7 @@ const ContactPage = () => {
 
   return (
     
-    <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
+    <div className="min-h-screen pt-[72px] xl:pt-[112px] bg-gray-50 font-sans text-gray-800">
       
       {/* --- HERO SECTION --- */}
       <section className="relative h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden">

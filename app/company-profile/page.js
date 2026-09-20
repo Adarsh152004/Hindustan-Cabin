@@ -22,7 +22,7 @@ const AboutPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans text-gray-800 overflow-x-hidden">
+    <div className="min-h-screen pt-[72px] xl:pt-[112px] bg-gray-50 font-sans text-gray-800 overflow-x-hidden">
       
       {/* --- HERO SECTION --- */}
       <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden">

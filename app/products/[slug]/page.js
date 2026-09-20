@@ -43,10 +43,10 @@ export default async function ProductPage({ params }) {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen pt-[72px] xl:pt-[112px] bg-slate-50 font-sans text-slate-800 selection:bg-blue-100 selection:text-blue-900">
       
       {/* Top Navigation Bar - Glass Effect */}
-      <nav className="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 xl:top-0 z-40 transition-all duration-300">
+      <nav className="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-[72px] xl:top-[112px] z-40 transition-all duration-300">
         <div className="container mx-auto px-4 py-3 flex items-center text-sm">
           <Link href="/" className="text-slate-500 hover:text-blue-600 transition-colors font-medium">Home</Link>
           <span className="mx-2 text-slate-300">/</span>

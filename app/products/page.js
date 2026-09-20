@@ -404,7 +404,7 @@ export default function ProductsPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen pt-[72px] xl:pt-[112px] bg-gray-50">
       <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
         <div className="max-w-6xl mx-auto px-4 py-3">
           <h1 className="text-2xl font-bold text-gray-800 text-center tracking-wide">Showroom</h1>

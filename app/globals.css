@@ -45,3 +45,68 @@ body {
 /* ── Scrollbar hide utility ─────────────────────────────── */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Hero Infinite Marquee ───────────────────────────────── */
+@keyframes marquee-scroll {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-hero-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 28s linear infinite;
+}
+
+.animate-hero-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ── Hero Floating Ambient Animations ────────────────────── */
+@keyframes hero-float-1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(3.5deg);
+  }
+}
+
+@keyframes hero-float-2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(10px) rotate(-3.5deg);
+  }
+}
+
+@keyframes hero-float-3 {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.08); }
+}
+
+.animate-hero-float-1 {
+  animation: hero-float-1 5s ease-in-out infinite;
+}
+
+.animate-hero-float-2 {
+  animation: hero-float-2 6.5s ease-in-out infinite;
+}
+
+.animate-hero-float-3 {
+  animation: hero-float-3 4s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 4s ease-in-out infinite;
+}
