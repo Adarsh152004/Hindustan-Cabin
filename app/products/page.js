@@ -12,7 +12,7 @@ const TABS = [
     id: "portable-cabin", label: "Portable Cabin", title: "Portable Cabin",
     description: "Versatile portable cabins built with premium MS/GI steel — ideal for site offices, labour housing, storage & emergency shelters.",
     subtitle: "Factory-built, crane-liftable, ready to use in hours.",
-    image: "../images/color-coated-cabin.jpg",
+    image: "/images/portable-cabin.jpg",
     productLinks: [
       { name: "Color Coated Portable Cabins", slug: "color-coated-portable-cabins" },
       { name: "Designed Portable Cabin", slug: "designed-portable-cabin" },
@@ -267,8 +267,8 @@ function TabContentBox({ tab }) {
       <div className="flex flex-col lg:flex-row">
         <div ref={imgRef} className="lg:w-1/2 relative bg-gradient-to-br from-[#932c25]  min-h-[280px] lg:min-h-[440px] overflow-hidden will-change-transform">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={tab.image} alt={tab.title} loading="lazy" className="w-full h-full object-cover absolute inset-0" onError={(e) => { e.target.style.display = "none"; }} />
-          <div className="absolute inset-0 flex items-center justify-center text-teal-400 font-medium text-sm pointer-events-none">{tab.title}</div>
+          <img src={tab.image} alt={tab.title} loading="lazy" className="w-full h-full object-cover absolute inset-0" onError={(e) => { e.target.src = "/images/portable-cabin.jpg"; }} />
+          <div className="absolute inset-0 flex items-center justify-center text-teal-400 font-medium text-sm pointer-events-none opacity-0">{tab.title}</div>
         </div>
         <div className="lg:w-1/2 p-6 lg:p-8 flex flex-col gap-4">
           <h2 ref={titleRef} className="text-2xl lg:text-3xl font-extrabold text-gray-900 leading-tight will-change-transform">{tab.title}</h2>
@@ -326,7 +326,7 @@ function CategoryCard({ category }) {
         <div className="md:w-64 lg:w-72 flex-shrink-0 relative bg-gray-100">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={category.image} alt={category.name} loading="lazy" className="w-full h-48 md:h-full object-cover"
-            onError={(e) => { e.target.style.display = "none"; e.target.parentElement.insertAdjacentHTML("beforeend", `<div class="w-full h-48 md:h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 text-blue-400 text-xs font-medium absolute inset-0">${category.name}</div>`); }} />
+            onError={(e) => { e.currentTarget.src = "/images/portable-cabin.jpg"; }} />
           <div className="absolute bottom-0 left-0 right-0 bg-teal-700/90 text-white text-center text-sm font-semibold py-1.5">({category.totalProducts})</div>
         </div>
         <div className="flex-1 p-5 flex flex-col">

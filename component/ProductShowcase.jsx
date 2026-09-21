@@ -1,14 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Check, ArrowRight, Briefcase, ShieldCheck, Clock } from 'lucide-react';
 
-// --- DATA LIST (Same Content) ---
+// --- DATA LIST (Local high-quality images) ---
 const productsData = [
   {
     id: "portable-cabin",
     name: "Portable Cabin",
-    image: "https://images.unsplash.com/photo-1596236561196-65698d707a7f?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/portable-cabin.jpg",
     description: "Prefabricated movable structure designed for versatility. Perfect for site offices, storage, or temporary living spaces.",
     features: ["Quick Installation (Ready in 24hrs)", "Weather Resistant Exterior Paint", "Heavy Duty Mild Steel Frame", "Customizable Size & Layout"],
     uses: ["Construction Site Offices", "Temporary Storage Rooms", "Security Guard Cabins", "Farmhouse Utility Blocks"],
@@ -20,7 +21,7 @@ const productsData = [
   {
     id: "security-cabin",
     name: "Portable Security Cabin",
-    image: "https://images.unsplash.com/photo-1555664424-778a6902201b?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/security-cabin.jpg",
     description: "Compact cabin engineered for maximum visibility. Ideal for gatekeepers to monitor entry and exit points effectively.",
     features: ["360° Glass Visibility Windows", "Built-in Work Table & Shelf", "Anti-skid Durable Flooring", "Pre-wired Fan & Light Points"],
     uses: ["Society Main Gates", "Factory Entry Points", "Parking Lot Booths", "Event Venue Security"],
@@ -32,7 +33,7 @@ const productsData = [
   {
     id: "pantry-cabin",
     name: "Pantry Cabin",
-    image: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/pantry-cabin.jpg",
     description: "Hygienic kitchen and dining unit equipped with stainless steel fixtures. Keeps food preparation safe and clean.",
     features: ["SS 304 Grade Sink & Tap", "Fire-resistant Insulation Walls", "Easy-to-clean Vinyl Panels", "Exhaust Fan Provision"],
     uses: ["Construction Site Canteens", "Labor Colony Kitchens", "School Dining Areas", "Office Breakrooms"],
@@ -44,7 +45,7 @@ const productsData = [
   {
     id: "cargo-container",
     name: "Cargo Container",
-    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/cargo-container.jpg",
     description: "Heavy-duty ISO certified shipping containers built for extreme durability. The ultimate solution for secure logistics.",
     features: ["Corten Steel Body (Rust Proof)", "100% Watertight Seal Guarantee", "Heavy Duty Lock Box Included", "Standard Forklift Pockets"],
     uses: ["International Shipping", "Heavy Machinery Storage", "Logistics Hubs", "Open Yard Storage"],
@@ -56,7 +57,7 @@ const productsData = [
   {
     id: "office-container",
     name: "Office Container",
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/container-office-cabin.jpg",
     description: "A modern twist on industrial storage. We convert rugged containers into stylish, air-conditioned office spaces.",
     features: ["Modern Industrial Aesthetic", "High Ceiling for Airiness", "PUF Insulated Walls (Cool)", "Glass Entry Door with Grill"],
     uses: ["Project Headquarters", "Creative Design Studios", "Real Estate Sales Galleries", "Remote Mining Camps"],
@@ -68,7 +69,7 @@ const productsData = [
   {
     id: "old-cargo-office",
     name: "Old Cargo Office Cabin",
-    image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/old-cargo-office.jpg",
     description: "Budget-friendly refurbished containers. We take used cargo boxes and fit them with basic office amenities.",
     features: ["Most Cost Effective Option", "Pre-owned but Strong Structure", "Basic Electrical Wiring Done", "Freshly Repainted Exterior"],
     uses: ["Budget Storage Solutions", "Tool Sheds on Sites", "Temporary Worker Shelters", "Scrap Yard Offices"],
@@ -80,7 +81,7 @@ const productsData = [
   {
     id: "gi-office-cabin",
     name: "GI Office Cabin",
-    image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/gi-office-cabin.jpg",
     description: "Premium cabins crafted with Galvanized Iron sheets. Specifically designed to resist rust in humid environments.",
     features: ["Rust Proof GI Outer Sheets", "Longer Lifespan (15+ Years)", "Thermal Insulation Layer", "Smooth Modern Finish"],
     uses: ["Coastal Construction Sites", "High Humidity Zones", "Permanent Site Offices", "Corporate Temporary HQs"],
@@ -92,7 +93,7 @@ const productsData = [
   {
     id: "store-cabin",
     name: "Store Cabin",
-    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/store-cabin.jpg",
     description: "Fortress-like storage units designed purely for security. No windows, heavy locks, and reinforced doors.",
     features: ["Reinforced Steel Door", "No Windows (Maximum Security)", "Heavy Duty Padlock Hasp", "Cross Ventilation Grills"],
     uses: ["Expensive Equipment Storage", "Inventory Rooms", "Hardware Yards", "Document Safe Keeping"],
@@ -104,7 +105,7 @@ const productsData = [
   {
     id: "portable-container-office",
     name: "Portable Container Office",
-    image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/container-office-cabin.jpg",
     description: "The best of both worlds: Container strength with Cabin comfort. Stackable units for multi-story temporary offices.",
     features: ["Stackable Design (2-3 Floors)", "Split AC Fitted", "Attached Washroom Unit", "LED Panel Lighting"],
     uses: ["Multi-story Project Sites", "Large Infrastructure Projects", "Mining Operation Offices", "Oil Rig Camps"],
@@ -116,7 +117,7 @@ const productsData = [
   {
     id: "isolation-ward",
     name: "Isolation Ward Cabin",
-    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/isolation-ward.jpg",
     description: "Specialized medical grade cabins. Can be fitted with negative pressure systems for infectious disease isolation.",
     features: ["Antibacterial Vinyl Flooring", "Intercom System Installed", "Internal Observation Window", "Attached Sanitation Unit"],
     uses: ["Hospital Extensions", "Clinic Isolation Rooms", "Quarantine Centers", "Emergency Wards"],
@@ -128,7 +129,7 @@ const productsData = [
   {
     id: "house-cabin",
     name: "Portable House Cabin",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/house-cabin.jpg",
     description: "Comfortable living quarters designed for humans, not just storage. Includes furniture and sleeping arrangements.",
     features: ["Bed & Cupboard Included", "Attached Toilet Option", "Small Kitchenette Area", "Mosquito Mesh Windows"],
     uses: ["Labor Colonies", "Staff Quarters", "Farm Stay Cottages", "Worker Housing"],
@@ -140,7 +141,7 @@ const productsData = [
   {
     id: "old-cargo",
     name: "Old Cargo Container",
-    image: "https://images.unsplash.com/photo-1605218427306-022ba8c696b9?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/old-cargo-container.jpg",
     description: "Second-hand shipping containers sold 'as-is'. Great for buyers who need raw storage space on a tight budget.",
     features: ["Economical Price Point", "Solid Structural Integrity", "Minor Cosmetic Dents", "Immediate Delivery Available"],
     uses: ["Personal Home Storage", "Garage Extension", "Garden Tool Shed", "Budget Logistics"],
@@ -152,7 +153,7 @@ const productsData = [
   {
     id: "mobile-toilet",
     name: "Portable Mobile Toilet",
-    image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1000&auto=format&fit=crop",
+    image: "/images/mobile-toilet.jpg",
     description: "Sanitation solutions that go where you go. Available in FRP (plastic) or Sandwich Panel models.",
     features: ["Integrated Water Tank", "Roof Ventilation Ducts", "Smooth Easy-clean Surface", "Choice of Squat/Western"],
     uses: ["Weddings & Outdoor Events", "Construction Sites", "Public Parks", "Religious Gatherings"],
@@ -224,10 +225,11 @@ export default function ProductShowcase() {
       >
         
         {/* LEFT: IMAGE */}
-        <div className="relative rounded-2xl overflow-hidden shadow-xl h-[600px] w-full bg-gray-100 group">
+        <div className="relative rounded-2xl overflow-hidden shadow-xl h-[500px] lg:h-[600px] w-full bg-gray-100 group">
           <img 
             src={activeProduct.image} 
             alt={activeProduct.name} 
+            onError={(e) => { e.currentTarget.src = '/images/portable-cabin.jpg'; }}
             className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
           />
         </div>
@@ -295,9 +297,22 @@ export default function ProductShowcase() {
              </div>
           </div>
 
-          <button className="w-fit bg-[#4a0404] hover:bg-[#330303] text-white font-semibold py-3.5 px-8 rounded-full flex items-center gap-2 transition-all shadow-md hover:shadow-lg mt-auto">
-            Get Quote Now <ArrowRight className="w-4 h-4" />
-          </button>
+          {/* ACTION BUTTONS CONNECTED TO REAL ROUTES */}
+          <div className="flex flex-wrap items-center gap-4 mt-auto">
+            <Link 
+              href="/contact" 
+              className="inline-flex items-center gap-2 bg-[#4a0404] hover:bg-[#330303] text-white font-semibold py-3.5 px-8 rounded-full transition-all shadow-md hover:shadow-lg"
+            >
+              Get Quote Now <ArrowRight className="w-4 h-4" />
+            </Link>
+
+            <Link 
+              href={`/products/${activeProduct.id}`} 
+              className="inline-flex items-center gap-2 border-2 border-[#4a0404] text-[#4a0404] hover:bg-[#4a0404] hover:text-white font-semibold py-3 px-6 rounded-full transition-all shadow-sm"
+            >
+              View Full Specs
+            </Link>
+          </div>
 
         </div>
       </div>

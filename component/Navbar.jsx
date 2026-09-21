@@ -425,9 +425,12 @@ export default function Navbar() {
             <Calculator className="w-[18px] h-[18px]" />
           </button>
           
-          <button className="bg-[#8b1e1e] hover:bg-[#6e1717] text-white px-6 py-2.5 rounded-full font-semibold shadow-sm hover:shadow transition-all duration-300">
+          <Link 
+            href="/contact"
+            className="bg-[#8b1e1e] hover:bg-[#6e1717] text-white px-6 py-2.5 rounded-full font-semibold shadow-sm hover:shadow transition-all duration-300 inline-block text-center"
+          >
             Get Quote
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -506,7 +509,11 @@ export default function Navbar() {
                            </Link>
                         ))}
                         {category.items.length > 5 && (
-                          <Link href={category.href} className="block py-1.5 px-3 text-xs font-bold text-[#8b1e1e]">
+                          <Link 
+                            href={category.href} 
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="block py-1.5 px-3 text-xs font-bold text-[#8b1e1e]"
+                          >
                             View all {category.name}...
                           </Link>
                         )}
@@ -519,9 +526,13 @@ export default function Navbar() {
           ))}
           
           <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
-             <button className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#8b1e1e] text-white rounded-full font-medium hover:bg-[#6e1717] transition-all shadow-md">
+             <Link 
+               href="/contact"
+               onClick={() => setIsMobileMenuOpen(false)}
+               className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#8b1e1e] text-white rounded-full font-medium hover:bg-[#6e1717] transition-all shadow-md text-center"
+             >
                 Get Quote
-             </button>
+             </Link>
              <Link 
                href="/login" 
                onClick={() => setIsMobileMenuOpen(false)}

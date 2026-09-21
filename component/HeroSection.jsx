@@ -2,111 +2,66 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Phone, ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Phone } from 'lucide-react';
 import Link from 'next/link';
 
-// ─── Slide Data (Modeled after hindustancabins.co.in + All User Images) ───────
+// ─── High-Quality Curated Slides ──────────────────────────────────────────────
 const slides = [
   {
     id: 1,
-    image: '/images/hero2.png',
-    miniTitle: 'Hindustan Cabin · Direct Manufacturer',
-    title: 'Portable Cabins, Built to Last',
-    subtitle:
-      'Durable, functional, and stylish portable solutions for offices, homes, security, and more. Engineered with heavy-duty GI steel and premium insulation.',
-    cta: { label: 'Explore Products', href: '/products' },
-    ctaSecondary: { label: 'Call Now', href: 'tel:+917942969777' },
+    image: '/images/hero-bg-1.jpg',
+    tag: 'Direct Manufacturer · Mumbai & Thane',
+    title: 'Engineered Portable Cabins & Site Offices',
+    desc: 'Heavy-duty GI & MS steel construction, thermally insulated and ready to deploy in hours.',
   },
   {
     id: 2,
-    image: '/images/hero3.png',
-    miniTitle: 'Hindustan Cabin · Custom Fabrication',
-    title: 'Your Space, Anywhere You Need It',
-    subtitle:
-      'Custom-designed portable cabins that combine mobility with comfort and practicality. Built for infrastructure, construction, and tough industrial sites.',
-    cta: { label: 'View All Products', href: '/products' },
-    ctaSecondary: { label: 'Get Free Quote', href: '/contact' },
+    image: '/images/hero-bg-2.jpg',
+    tag: 'Custom Industrial Fabrication',
+    title: 'Prefabricated Storage & Cargo Containers',
+    desc: 'Marine-grade Cor-Ten steel units built for extreme weather durability and site security.',
   },
   {
     id: 3,
-    image: '/images/hero.webp',
-    miniTitle: 'Hindustan Cabin · Turnkey Engineering',
-    title: 'Innovation in Every Cabin',
-    subtitle:
-      'Modern, high-quality cabins tailored for work, living, and commercial use. Complete with turnkey interiors, false ceilings, and plumbing.',
-    cta: { label: 'Explore Living Cabins', href: '/products' },
-    ctaSecondary: { label: 'Get Free Quote', href: '/contact' },
+    image: '/images/hero-bg-3.jpg',
+    tag: 'Turnkey Commercial Workspaces',
+    title: 'Modern Modular Container Offices',
+    desc: 'Fully equipped executive office spaces with electrical wiring, AC provisions, and premium interiors.',
   },
   {
     id: 4,
-    image: '/images/hero4.jpg',
-    miniTitle: 'Hindustan Cabin · Heavy Duty Build',
-    title: 'Industrial Weatherproof Cabins',
-    subtitle:
-      'High-gauge corrugated steel with marine epoxy coating. Built to withstand 150 km/h wind loads, extreme monsoon rains, and heavy site duty.',
-    cta: { label: 'View Industrial Units', href: '/products' },
-    ctaSecondary: { label: 'Call Now', href: 'tel:+917942969777' },
+    image: '/images/hero2.png',
+    tag: 'Reliable Site Infrastructure',
+    title: 'Security Cabins & Mobile Accommodations',
+    desc: 'Compact, 360° visibility checkposts and living house cabins built for 15+ years lifespan.',
   },
-  {
-    id: 5,
-    image: '/images/color-coated-cabin.jpg',
-    miniTitle: 'Hindustan Cabin · Security Solutions',
-    title: 'Color-Coated Security Cabins',
-    subtitle:
-      'Compact, aesthetic guard checkposts with 360-degree glass visibility, pre-fitted switchboards, and weather-shield canopy for 24/7 duty.',
-    cta: { label: 'Explore Cabins', href: '/products' },
-    ctaSecondary: { label: 'Get Free Quote', href: '/contact' },
-  },
-  {
-    id: 6,
-    image: '/GI-Portable-Cabin.jpg',
-    miniTitle: 'Hindustan Cabin · Proven Reliability',
-    title: 'Engineered GI Portable Cabins',
-    subtitle:
-      'Galvanized iron shell with high-density thermal insulation. Keeps interiors cool during peak summers and 100% dry in monsoons. 10+ years rated lifespan.',
-    cta: { label: 'Explore GI Cabins', href: '/products' },
-    ctaSecondary: { label: 'Call Now', href: 'tel:+917942969777' },
-  },
-  {
-    id: 7,
-    image: '/MS-Old-Cargo-Container.jpg',
-    miniTitle: 'Hindustan Cabin · Heavy Storage',
-    title: 'Watertight Corten Cargo Containers',
-    subtitle:
-      'Marine-grade watertight cargo containers for heavy site storage, secure tool lockers, and relocatable warehousing. Stackable and tamper-proof.',
-    cta: { label: 'View Storage Units', href: '/products' },
-    ctaSecondary: { label: 'Get Free Quote', href: '/contact' },
-  },
-];
-
-// ─── Stats Data ───────────────────────────────────────────────────────────────
-const stats = [
-  { value: '7+', label: 'Years of Excellence' },
-  { value: '500+', label: 'Products in Stock' },
-  { value: '1,000+', label: 'Happy Clients' },
-  { value: 'GST & ISO', label: 'Verified & Certified' },
 ];
 
 export default function HeroSection() {
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const DURATION = 5000;
+  // Fast auto-change (3.8 seconds for brisk, responsive feel)
+  const SLIDE_DURATION = 3800;
 
   const next = useCallback(() => {
-    setCurrent((p) => (p + 1) % slides.length);
+    setCurrent((prev) => (prev + 1) % slides.length);
   }, []);
 
-  const goTo = (i) => {
-    setCurrent(i);
+  const prev = useCallback(() => {
+    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+  }, []);
+
+  const goTo = (index) => {
+    setCurrent(index);
   };
 
-  // ─ Auto-play slider ─────────────────────────────────────────────────────────
+  // ── Auto-play Fast Slider ───────────────────────────────────────────────────
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
       next();
-    }, DURATION);
+    }, SLIDE_DURATION);
     return () => clearInterval(timer);
   }, [isPaused, next]);
 
@@ -114,142 +69,102 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative w-full min-h-[100svh] bg-gray-950 text-white overflow-hidden flex flex-col justify-between selection:bg-[#8B1A1A] selection:text-white"
+      className="relative w-full h-[82svh] min-h-[520px] max-h-[820px] bg-gray-950 text-white overflow-hidden flex flex-col justify-between select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      aria-label="Website Hero Banner"
     >
-      {/* ── Background Image Slider with Smooth Cross-Fade & Ken Burns Effect ── */}
+      {/* ── Background Image Slider with Smooth Scale & Dynamic Transition ──── */}
       <AnimatePresence initial={false} mode="sync">
         <motion.div
           key={`hero-bg-${slide.id}`}
-          initial={{ opacity: 0, scale: 1.06 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 0.9, ease: 'easeOut' }}
-          className="absolute inset-0 z-0"
+          initial={{ opacity: 0, scale: 1.08 }}
+          animate={{ opacity: 1, scale: 1.0 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{
+            opacity: { duration: 0.8, ease: 'easeOut' },
+            scale: { duration: 4.5, ease: 'easeOut' },
+          }}
+          className="absolute inset-0 z-0 overflow-hidden"
         >
           <img
             src={slide.image}
             alt={slide.title}
-            className="w-full h-full object-cover"
-            style={{ objectPosition: 'center 35%' }}
+            className="w-full h-full object-cover object-center"
           />
 
-          {/* Deep Cinematic Overlay Matching hindustancabins.co.in style */}
+          {/* Deep Cinematic Gradients */}
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                'linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.4) 100%)',
+                'linear-gradient(90deg, rgba(8,8,12,0.85) 0%, rgba(8,8,12,0.6) 50%, rgba(8,8,12,0.2) 100%)',
             }}
           />
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%, rgba(0,0,0,0.3) 100%)',
+                'linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 35%, rgba(8,8,12,0.8) 100%)',
             }}
           />
         </motion.div>
       </AnimatePresence>
 
-      {/* ═════════════════════════════════════════════════════════════════════
-          SIGNATURE VERTICAL PAGINATION (Exact style of hindustancabins.co.in)
-          - Left-side vertical rail with compact extending lines & dots
-          - Scaled down so it never reaches or overlaps the navbar
-         ═════════════════════════════════════════════════════════════════════ */}
-      <div className="absolute left-4 sm:left-6 lg:left-10 top-[53%] -translate-y-1/2 z-30 hidden lg:flex flex-col items-center pointer-events-auto">
-        {/* Top Extending Gradient Line (Compact 28px) */}
-        <div
-          className="w-[2px] h-[28px] rounded-full"
-          style={{
-            background: 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 100%)',
-          }}
-        />
+      {/* ── Desktop-Only Left Arrow (Hidden on Mobile) ───────────────────────── */}
+      <button
+        onClick={prev}
+        aria-label="Previous slide"
+        className="hidden md:flex absolute left-6 lg:left-10 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/40 hover:bg-black/75 border border-white/20 text-white items-center justify-center transition-all duration-300 backdrop-blur-md hover:scale-110 shadow-2xl focus:outline-none"
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </button>
 
-        {/* Vertical Dots with Compact Spacing */}
-        <div className="flex flex-col gap-2.5 py-2">
-          {slides.map((s, idx) => {
-            const isActive = idx === current;
-            return (
-              <button
-                key={s.id}
-                onClick={() => goTo(idx)}
-                aria-label={`Go to slide ${idx + 1}: ${s.title}`}
-                className="group relative w-6 h-6 flex items-center justify-center focus:outline-none"
-              >
-                {/* Active Outer Target Ring (Compact 24px circle with accent border) */}
-                {isActive && (
-                  <motion.span
-                    layoutId="activeTargetRing"
-                    className="absolute w-6 h-6 rounded-full border-2 border-[#D4A017] shadow-[0_0_10px_rgba(212,160,23,0.7)]"
-                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                  />
-                )}
+      {/* ── Desktop-Only Right Arrow (Hidden on Mobile) ──────────────────────── */}
+      <button
+        onClick={next}
+        aria-label="Next slide"
+        className="hidden md:flex absolute right-6 lg:right-10 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/40 hover:bg-black/75 border border-white/20 text-white items-center justify-center transition-all duration-300 backdrop-blur-md hover:scale-110 shadow-2xl focus:outline-none"
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
 
-                {/* Inner Dot (Compact 8px circle) */}
-                <span
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    isActive
-                      ? 'bg-[#D4A017] shadow-[0_0_6px_#D4A017]'
-                      : 'bg-white/60 group-hover:bg-[#D4A017] group-hover:scale-125'
-                  }`}
-                />
-
-                {/* Slide-out Tooltip on Hover */}
-                <span className="pointer-events-none absolute left-8 px-2.5 py-1 rounded-lg text-xs font-semibold text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-1 group-hover:translate-x-0 shadow-2xl border border-white/20 backdrop-blur-md bg-black/90 z-50">
-                  <span className="text-[#D4A017] mr-1.5 font-bold">0{idx + 1}</span>
-                  <span>{s.title}</span>
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Bottom Extending Gradient Line (Compact 28px) */}
-        <div
-          className="w-[2px] h-[28px] rounded-full"
-          style={{
-            background: 'linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 100%)',
-          }}
-        />
-      </div>
-
-      {/* ── Main Hero Text Content ── */}
-      <div className="relative z-20 flex-1 flex flex-col justify-center px-6 sm:px-12 lg:pl-32 lg:pr-16 max-w-[1400px] mx-auto w-full pt-28 sm:pt-32 pb-8 lg:pb-28">
+      {/* ── Main Banner Content (Clean, Small Text & Contact Button) ─────────── */}
+      <div className="relative z-20 flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-24 max-w-7xl mx-auto w-full pt-28 sm:pt-32 pb-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={`hero-text-${slide.id}`}
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-3xl"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-2xl"
           >
-            {/* Mini Title (matches .cs_hero_mini_title cs_accent_color) */}
-            <h3 className="text-[#D4A017] text-sm sm:text-base md:text-lg font-semibold tracking-wider uppercase mb-3 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#D4A017]" />
-              <span>{slide.miniTitle}</span>
-            </h3>
+            {/* Small Subtle Category Tag */}
+            <p className="text-white/80 text-xs sm:text-sm font-semibold tracking-wider uppercase mb-2.5 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
+              <span>{slide.tag}</span>
+            </p>
 
-            {/* Main Headline (matches .cs_hero_title cs_fs_74) */}
-            <h1 className="text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.08] tracking-tight mb-5 drop-shadow-md">
+            {/* Concise Title (Clean & Modern) */}
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.18] mb-3.5 drop-shadow-md">
               {slide.title}
             </h1>
 
-            {/* Subtitle (matches .cs_hero_subtitle) */}
-            <p className="text-gray-200 text-sm sm:text-base md:text-xl font-light leading-relaxed mb-8 max-w-2xl">
-              {slide.subtitle}
+            {/* Small Concise 1-Line Description */}
+            <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-6 max-w-xl font-normal">
+              {slide.desc}
             </p>
 
-            {/* Clean Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4">
+            {/* Clean Contact Buttons */}
+            <div className="flex flex-wrap items-center gap-3.5">
+              {/* Primary Contact Button */}
               <Link
-                href={slide.cta.href}
-                className="group inline-flex items-center justify-center gap-2.5 px-8 py-3.5 sm:py-4 rounded-lg font-bold text-white text-sm sm:text-base transition-all duration-300 shadow-xl"
+                href="/contact"
+                className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-white text-sm transition-all duration-300 shadow-xl hover:shadow-red-950/50"
                 style={{
                   background: '#8B1A1A',
-                  border: '1px solid rgba(255,255,255,0.2)',
+                  border: '1px solid rgba(255,255,255,0.25)',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#a32020';
@@ -260,13 +175,14 @@ export default function HeroSection() {
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                <span>{slide.cta.label}</span>
+                <span>Contact Us</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
 
-              <Link
-                href={slide.ctaSecondary.href}
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-4 rounded-lg font-semibold text-sm sm:text-base text-white transition-all duration-300 border-2 border-white/70 hover:border-white hover:bg-white/10 backdrop-blur-sm"
+              {/* Quick Call Action */}
+              <a
+                href="tel:+918692943939"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full font-medium text-xs sm:text-sm text-gray-200 transition-all duration-300 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md"
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-2px)';
                 }}
@@ -274,72 +190,44 @@ export default function HeroSection() {
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                {slide.ctaSecondary.href.startsWith('tel:') ? (
-                  <Phone className="w-4 h-4 text-[#D4A017]" />
-                ) : null}
-                <span>{slide.ctaSecondary.label}</span>
-              </Link>
+                <Phone className="w-3.5 h-3.5 text-white/90" />
+                <span>+91-8692943939</span>
+              </a>
             </div>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* ── Mobile Horizontal Dots (when screen is < lg) ── */}
-      <div className="relative my-3 flex lg:hidden justify-center items-center gap-3 z-30">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goTo(i)}
-            aria-label={`Go to slide ${i + 1}`}
-            className="relative w-7 h-7 flex items-center justify-center focus:outline-none"
-          >
-            {i === current && (
-              <span className="absolute w-7 h-7 rounded-full border-2 border-[#D4A017]" />
-            )}
-            <span
-              className={`w-2.5 h-2.5 rounded-full transition-all ${
-                i === current ? 'bg-[#D4A017]' : 'bg-white/60'
+      {/* ── Minimal Clean Dots at Bottom Center (No Yellow Boxes) ────────────── */}
+      <div className="relative z-20 pb-8 flex justify-center items-center gap-2">
+        {slides.map((s, idx) => {
+          const isActive = idx === current;
+          return (
+            <button
+              key={s.id}
+              onClick={() => goTo(idx)}
+              aria-label={`Slide ${idx + 1}`}
+              className={`h-2 rounded-full transition-all duration-300 focus:outline-none ${
+                isActive
+                  ? 'w-8 bg-white shadow-md'
+                  : 'w-2 bg-white/35 hover:bg-white/70'
               }`}
             />
-          </button>
-        ))}
+          );
+        })}
       </div>
 
-      {/* ── Bottom Docked Stats Bar (Responsive & Non-Overlapping) ── */}
-      <div
-        className="relative lg:absolute lg:bottom-0 left-0 right-0 z-30 w-full"
-        style={{
-          background: 'rgba(8, 8, 12, 0.88)',
-          backdropFilter: 'blur(16px)',
-          borderTop: '1px solid rgba(212, 160, 23, 0.22)',
-        }}
-      >
-        <div className="max-w-[1400px] mx-auto grid grid-cols-2 sm:grid-cols-4 divide-x divide-white/10">
-          {stats.map((s, i) => (
-            <div key={i} className="flex flex-col items-center justify-center py-3 sm:py-4 px-2 gap-0.5">
-              <span
-                className="text-lg sm:text-2xl font-extrabold leading-none text-[#D4A017]"
-              >
-                {s.value}
-              </span>
-              <span className="text-gray-300 text-[10px] sm:text-xs font-medium uppercase tracking-wider text-center">
-                {s.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Mobile Floating Instant Call Button ── */}
+      {/* ── Mobile Floating Instant Call Button ──────────────────────────────── */}
       <a
-        href="tel:+917942969777"
+        href="tel:+918692943939"
         className="hero-call-btn fixed bottom-6 right-4 z-50 lg:hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-white text-xs font-semibold shadow-2xl"
         style={{
           background: 'linear-gradient(135deg, #8B1A1A 0%, #c0392b 100%)',
           border: '1px solid rgba(255,255,255,0.3)',
         }}
+        aria-label="Call Hindustan Cabin"
       >
-        <Phone className="w-3.5 h-3.5 text-amber-300" />
+        <Phone className="w-3.5 h-3.5 text-white" />
         <span>Call Now</span>
       </a>
     </section>

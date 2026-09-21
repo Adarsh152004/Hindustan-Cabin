@@ -61,14 +61,14 @@ const Footer = () => {
           
           {/* COLUMN 1: LOGO & ABOUT */}
           <motion.div variants={itemVariants} className="space-y-6">
-            <div className="flex items-center gap-3 group cursor-pointer">
+            <Link href="/" className="inline-block group cursor-pointer">
                <motion.img 
                  whileHover={{ scale: 1.1, rotate: 5 }}
                  src="/logo.png" 
                  alt="Hindustan Cabin Logo" 
                  className="w-16 h-16 object-contain drop-shadow-md"
                />
-            </div>
+            </Link>
 
             <p className="text-sm leading-relaxed text-gray-700 text-justify">
               We, Hindustan Cabin, Are One Of The Foremost Manufacturers Of An Extensive Array Of MS Portable Cabin, GI Portable Cabin, Container Houses And Many More.
@@ -159,15 +159,15 @@ const Footer = () => {
             <h3 className="text-lg font-bold text-black mb-6 border-b-2 border-gray-400 pb-2 inline-block">Contact Us</h3>
             <div className="space-y-4 text-sm text-gray-700">
               
-              <motion.div whileHover={{ x: 5 }} className="flex items-start gap-3 cursor-pointer group">
+              <a href="tel:+919967463733" className="flex items-start gap-3 cursor-pointer group">
                 <Phone className="w-4 h-4 mt-1 text-[#8B0000] group-hover:scale-110 transition-transform" />
                 <span className="group-hover:text-[#8B0000] transition-colors">(+) 91 9967463733</span>
-              </motion.div>
+              </a>
 
-              <motion.div whileHover={{ x: 5 }} className="flex items-start gap-3 cursor-pointer group">
+              <a href="mailto:info@hindustancabin.in" className="flex items-start gap-3 cursor-pointer group">
                 <Mail className="w-4 h-4 mt-1 text-[#8B0000] group-hover:scale-110 transition-transform" />
                 <span className="group-hover:text-[#8B0000] transition-colors">info@hindustancabin.in</span>
-              </motion.div>
+              </a>
 
               <div className="mt-4">
                 <p className="font-bold text-black flex items-center gap-2 mb-1">
