@@ -1,205 +1,268 @@
-'use client';
+﻿'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ChevronLeft, ChevronRight, Phone } from 'lucide-react';
-import Link from 'next/link';
+import { Phone } from 'lucide-react';
 
-// ─── High-Quality Curated Slides ──────────────────────────────────────────────
+// Slides - pure imagery, zero text
 const slides = [
-  {
-    id: 1,
-    image: '/images/hero-bg-1.jpg',
-    tag: 'Direct Manufacturer · Mumbai & Thane',
-    title: 'Engineered Portable Cabins & Site Offices',
-    desc: 'Heavy-duty GI & MS steel construction, thermally insulated and ready to deploy in hours.',
-  },
-  {
-    id: 2,
-    image: '/images/hero-bg-2.jpg',
-    tag: 'Custom Industrial Fabrication',
-    title: 'Prefabricated Storage & Cargo Containers',
-    desc: 'Marine-grade Cor-Ten steel units built for extreme weather durability and site security.',
-  },
-  {
-    id: 3,
-    image: '/images/hero-bg-3.jpg',
-    tag: 'Turnkey Commercial Workspaces',
-    title: 'Modern Modular Container Offices',
-    desc: 'Fully equipped executive office spaces with electrical wiring, AC provisions, and premium interiors.',
-  },
-  {
-    id: 4,
-    image: '/images/hero2.png',
-    tag: 'Reliable Site Infrastructure',
-    title: 'Security Cabins & Mobile Accommodations',
-    desc: 'Compact, 360° visibility checkposts and living house cabins built for 15+ years lifespan.',
-  },
+  { id: 1, image: '/images/hero-bg-1.jpg', kenClass: 'hero-ken-1', accent: '#dc2626' },
+  { id: 2, image: '/images/hero-bg-2.jpg', kenClass: 'hero-ken-2', accent: '#b91c1c' },
+  { id: 3, image: '/images/hero-bg-3.jpg', kenClass: 'hero-ken-3', accent: '#dc2626' },
+  { id: 4, image: '/images/hero2.png',     kenClass: 'hero-ken-4', accent: '#ef4444' },
 ];
 
+const SLIDE_DURATION = 5000;
+
+const PARTICLES = [
+  { cls: 'particle-a', bottom: '20%', left: '8%',  size: 4, color: 'rgba(220,38,38,0.8)' },
+  { cls: 'particle-b', bottom: '35%', left: '20%', size: 2, color: 'rgba(255,255,255,0.55)' },
+  { cls: 'particle-c', bottom: '12%', left: '35%', size: 5, color: 'rgba(220,38,38,0.5)' },
+  { cls: 'particle-d', bottom: '25%', left: '50%', size: 2, color: 'rgba(255,255,255,0.4)' },
+  { cls: 'particle-e', bottom: '18%', left: '63%', size: 3, color: 'rgba(239,68,68,0.65)' },
+  { cls: 'particle-f', bottom: '32%', left: '76%', size: 2, color: 'rgba(255,255,255,0.5)' },
+  { cls: 'particle-a', bottom: '8%',  left: '88%', size: 3, color: 'rgba(220,38,38,0.55)' },
+  { cls: 'particle-b', bottom: '45%', left: '93%', size: 2, color: 'rgba(255,255,255,0.35)' },
+];
+
+// SVG ring progress dot for mobile
+function RingDot({ active, onClick, label, dur }) {
+  const r = 9;
+  const circ = 2 * Math.PI * r;
+  return (
+    <button
+      onClick={onClick}
+      aria-label={label}
+      className="relative flex items-center justify-center focus:outline-none"
+      style={{ width: 28, height: 28 }}
+    >
+      <svg width="28" height="28" viewBox="0 0 28 28" className="absolute inset-0">
+        <circle cx="14" cy="14" r={r} fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" />
+        {active && (
+          <circle
+            cx="14" cy="14" r={r}
+            fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"
+            strokeDasharray={circ} strokeDashoffset={circ}
+            transform="rotate(-90 14 14)"
+            style={{ animation: `dot-fill ${dur}ms linear forwards` }}
+          />
+        )}
+      </svg>
+      <span
+        className="relative rounded-full transition-all duration-300"
+        style={{
+          width:      active ? 6 : 5,
+          height:     active ? 6 : 5,
+          background: active ? '#ef4444' : 'rgba(255,255,255,0.4)',
+        }}
+      />
+    </button>
+  );
+}
+
 export default function HeroSection() {
-  const [current, setCurrent] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [current, setCurrent]         = useState(0);
+  const [showShimmer, setShowShimmer] = useState(false);
+  const [progressKey, setProgressKey] = useState(0);
+  const [dir, setDir]                 = useState(1);
+  const timerRef   = useRef(null);
+  const touchX     = useRef(null);
 
-  // Fast auto-change (3.8 seconds for brisk, responsive feel)
-  const SLIDE_DURATION = 3800;
-
-  const next = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % slides.length);
+  const advance = useCallback((d = 1) => {
+    setDir(d);
+    setCurrent(prev => (prev + d + slides.length) % slides.length);
+    setShowShimmer(true);
+    setProgressKey(k => k + 1);
+    setTimeout(() => setShowShimmer(false), 2800);
   }, []);
 
-  const prev = useCallback(() => {
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-  }, []);
+  const resetTimer = useCallback(() => {
+    clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => advance(1), SLIDE_DURATION);
+  }, [advance]);
 
-  const goTo = (index) => {
-    setCurrent(index);
+  useEffect(() => {
+    resetTimer();
+    return () => clearInterval(timerRef.current);
+  }, [resetTimer]);
+
+  const goTo = useCallback((idx) => {
+    setDir(idx > current ? 1 : -1);
+    setCurrent(idx);
+    setShowShimmer(true);
+    setProgressKey(k => k + 1);
+    setTimeout(() => setShowShimmer(false), 2800);
+    resetTimer();
+  }, [current, resetTimer]);
+
+  // Touch swipe
+  const onTouchStart = (e) => { touchX.current = e.touches[0].clientX; };
+  const onTouchEnd   = (e) => {
+    if (touchX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    if (Math.abs(dx) > 40) { advance(dx < 0 ? 1 : -1); resetTimer(); }
+    touchX.current = null;
   };
 
-  // ── Auto-play Fast Slider ───────────────────────────────────────────────────
-  useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(() => {
-      next();
-    }, SLIDE_DURATION);
-    return () => clearInterval(timer);
-  }, [isPaused, next]);
+  const slide   = slides[current];
+  const nextIdx = (current + 1) % slides.length;
 
-  const slide = slides[current];
+  const imgVariants = {
+    enter:  (d) => ({ opacity: 0, x: d > 0 ?  50 : -50 }),
+    center: { opacity: 1, x: 0 },
+    exit:   (d) => ({ opacity: 0, x: d > 0 ? -50 :  50 }),
+  };
 
   return (
     <section
-      className="relative w-full h-[82svh] min-h-[520px] max-h-[820px] bg-gray-950 text-white overflow-hidden flex flex-col justify-between select-none"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      aria-label="Website Hero Banner"
+      className="relative w-full overflow-hidden select-none bg-black"
+      style={{ height: '100svh', minHeight: 500, maxHeight: 920 }}
+      aria-label="Hero Banner"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
     >
-      {/* ── Background Image Slider with Smooth Scale & Dynamic Transition ──── */}
-      <AnimatePresence initial={false} mode="sync">
+      {/* BG IMAGE with Ken Burns + directional slide */}
+      <AnimatePresence mode="sync" custom={dir}>
         <motion.div
-          key={`hero-bg-${slide.id}`}
-          initial={{ opacity: 0, scale: 1.08 }}
-          animate={{ opacity: 1, scale: 1.0 }}
-          exit={{ opacity: 0, scale: 0.96 }}
-          transition={{
-            opacity: { duration: 0.8, ease: 'easeOut' },
-            scale: { duration: 4.5, ease: 'easeOut' },
-          }}
+          key={`bg-${slide.id}`}
+          custom={dir}
+          variants={imgVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.85, ease: [0.77, 0, 0.18, 1] }}
           className="absolute inset-0 z-0 overflow-hidden"
         >
           <img
             src={slide.image}
-            alt={slide.title}
-            className="w-full h-full object-cover object-center"
-          />
-
-          {/* Deep Cinematic Gradients */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                'linear-gradient(90deg, rgba(8,8,12,0.85) 0%, rgba(8,8,12,0.6) 50%, rgba(8,8,12,0.2) 100%)',
-            }}
-          />
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                'linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 35%, rgba(8,8,12,0.8) 100%)',
-            }}
+            alt="" aria-hidden="true"
+            className={`w-full h-full object-cover object-center will-change-transform ${slide.kenClass}`}
           />
         </motion.div>
       </AnimatePresence>
 
-      {/* ── Desktop-Only Left Arrow (Hidden on Mobile) ───────────────────────── */}
-      <button
-        onClick={prev}
-        aria-label="Previous slide"
-        className="hidden md:flex absolute left-6 lg:left-10 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/40 hover:bg-black/75 border border-white/20 text-white items-center justify-center transition-all duration-300 backdrop-blur-md hover:scale-110 shadow-2xl focus:outline-none"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
-
-      {/* ── Desktop-Only Right Arrow (Hidden on Mobile) ──────────────────────── */}
-      <button
-        onClick={next}
-        aria-label="Next slide"
-        className="hidden md:flex absolute right-6 lg:right-10 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/40 hover:bg-black/75 border border-white/20 text-white items-center justify-center transition-all duration-300 backdrop-blur-md hover:scale-110 shadow-2xl focus:outline-none"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
-
-      {/* ── Main Banner Content (Clean, Small Text & Contact Button) ─────────── */}
-      <div className="relative z-20 flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-24 max-w-7xl mx-auto w-full pt-28 sm:pt-32 pb-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`hero-text-${slide.id}`}
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-2xl"
-          >
-            {/* Small Subtle Category Tag */}
-            <p className="text-white/80 text-xs sm:text-sm font-semibold tracking-wider uppercase mb-2.5 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
-              <span>{slide.tag}</span>
-            </p>
-
-            {/* Concise Title (Clean & Modern) */}
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.18] mb-3.5 drop-shadow-md">
-              {slide.title}
-            </h1>
-
-            {/* Small Concise 1-Line Description */}
-            <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed mb-6 max-w-xl font-normal">
-              {slide.desc}
-            </p>
-
-            {/* Clean Contact Buttons */}
-            <div className="flex flex-wrap items-center gap-3.5">
-              {/* Primary Contact Button */}
-              <Link
-                href="/contact"
-                className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-white text-sm transition-all duration-300 shadow-xl hover:shadow-red-950/50"
-                style={{
-                  background: '#8B1A1A',
-                  border: '1px solid rgba(255,255,255,0.25)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#a32020';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = '#8B1A1A';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                <span>Contact Us</span>
-                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-
-              {/* Quick Call Action */}
-              <a
-                href="tel:+918692943939"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full font-medium text-xs sm:text-sm text-gray-200 transition-all duration-300 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md"
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                <Phone className="w-3.5 h-3.5 text-white/90" />
-                <span>+91-8692943939</span>
-              </a>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+      {/* AURORA GLOW blobs */}
+      <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
+        <div
+          className="hero-aurora-1 absolute rounded-full"
+          style={{
+            width: 500, height: 500,
+            bottom: '-18%', left: '-10%',
+            background: `radial-gradient(circle, ${slide.accent}55 0%, transparent 70%)`,
+            filter: 'blur(64px)',
+          }}
+        />
+        <div
+          className="hero-aurora-2 absolute rounded-full"
+          style={{
+            width: 380, height: 380,
+            top: '-12%', right: '4%',
+            background: 'radial-gradient(circle, rgba(180,30,30,0.4) 0%, transparent 70%)',
+            filter: 'blur(52px)',
+          }}
+        />
       </div>
 
-      {/* ── Minimal Clean Dots at Bottom Center (No Yellow Boxes) ────────────── */}
-      <div className="relative z-20 pb-8 flex justify-center items-center gap-2">
+      {/* CINEMATIC VIGNETTE */}
+      <div
+        className="absolute inset-0 z-[3] pointer-events-none hero-vignette"
+        style={{
+          background:
+            'radial-gradient(ellipse at 50% 110%, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0) 60%),' +
+            'linear-gradient(180deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.84) 100%)',
+        }}
+      />
+
+      {/* SCAN LINES */}
+      <div className="absolute inset-0 z-[4] pointer-events-none hero-scanlines" />
+
+      {/* SHIMMER SWEEP */}
+      {showShimmer && (
+        <div
+          key={`shimmer-${progressKey}`}
+          className="absolute inset-0 z-[5] pointer-events-none hero-shimmer"
+          style={{
+            background: 'linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.09) 50%, transparent 80%)',
+            width: '65%', height: '100%',
+          }}
+        />
+      )}
+
+      {/* FLOATING EMBERS */}
+      <div className="absolute inset-0 z-[4] pointer-events-none overflow-hidden">
+        {PARTICLES.map((p, i) => (
+          <motion.span
+            key={`p-${i}`}
+            className={p.cls}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: i * 0.1, duration: 0.5 }}
+            style={{
+              position: 'absolute',
+              bottom: p.bottom, left: p.left,
+              width: p.size, height: p.size,
+              borderRadius: '50%',
+              background: p.color,
+              display: 'block',
+              filter: 'blur(0.6px)',
+            }}
+          />
+        ))}
+      </div>
+
+      {/* TOP-RIGHT DOUBLE SPINNING RINGS */}
+      <div className="absolute top-20 right-0 z-[6] pointer-events-none w-36 h-36 sm:w-52 sm:h-52 overflow-hidden">
+        <div className="hero-corner-spin absolute -top-14 -right-14 w-52 h-52 border border-white/10 rounded-full" />
+        <div
+          className="absolute -top-9 -right-9 w-36 h-36 border border-red-600/20 rounded-full"
+          style={{ animation: 'corner-spin 30s linear infinite reverse' }}
+        />
+        <div className="absolute top-7 right-7 w-2.5 h-2.5 rounded-full bg-red-600/80" />
+        <div className="absolute top-4 right-14 w-1.5 h-1.5 rounded-full bg-white/40" />
+        <div className="absolute top-12 right-5 w-1 h-1 rounded-full bg-white/25" />
+      </div>
+
+      {/* LEFT SIDE ACCENT LINE (sm+) */}
+      <div className="absolute top-1/4 left-5 lg:left-8 z-[6] pointer-events-none hidden sm:flex flex-col items-center gap-1.5">
+        <div className="w-px h-20 bg-gradient-to-b from-transparent via-red-600/60 to-transparent" />
+        <div className="w-1.5 h-1.5 rounded-full bg-red-600/80" />
+        <div className="w-px h-12 bg-gradient-to-b from-red-600/40 to-transparent" />
+      </div>
+
+      {/* MAGAZINE COUNTER — bottom left */}
+      <div className="absolute bottom-[76px] sm:bottom-[84px] left-5 sm:left-10 z-30 flex items-end gap-2.5 pointer-events-none">
+        <div className="overflow-hidden leading-none">
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={`digit-${current}`}
+              initial={{ y: 44, opacity: 0 }}
+              animate={{ y: 0,  opacity: 1 }}
+              exit={{    y: -28, opacity: 0 }}
+              transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+              className="block font-black text-white tabular-nums"
+              style={{
+                fontSize: 'clamp(2.2rem, 5.5vw, 3.8rem)',
+                lineHeight: 1,
+                textShadow: `0 0 32px ${slide.accent}99`,
+              }}
+            >
+              {String(current + 1).padStart(2, '0')}
+            </motion.span>
+          </AnimatePresence>
+        </div>
+        <div className="flex flex-col gap-1 mb-1.5">
+          <div
+            className="w-px self-center"
+            style={{ height: 26, background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.5), transparent)' }}
+          />
+          <span className="text-white/40 text-[11px] font-bold tabular-nums">
+            {String(slides.length).padStart(2, '0')}
+          </span>
+        </div>
+      </div>
+
+      {/* DESKTOP THUMBNAIL STRIP */}
+      <div className="absolute right-5 lg:right-8 top-1/2 -translate-y-1/2 z-30 hidden lg:flex flex-col gap-3.5">
         {slides.map((s, idx) => {
           const isActive = idx === current;
           return (
@@ -207,29 +270,112 @@ export default function HeroSection() {
               key={s.id}
               onClick={() => goTo(idx)}
               aria-label={`Slide ${idx + 1}`}
-              className={`h-2 rounded-full transition-all duration-300 focus:outline-none ${
-                isActive
-                  ? 'w-8 bg-white shadow-md'
-                  : 'w-2 bg-white/35 hover:bg-white/70'
-              }`}
-            />
+              className={`relative overflow-hidden rounded-xl focus:outline-none ${isActive ? 'hero-thumb-active' : ''}`}
+              style={{
+                width:   isActive ? 70 : 52,
+                height:  isActive ? 54 : 38,
+                opacity: isActive ? 1 : 0.45,
+                transition: 'all 0.45s cubic-bezier(0.16,1,0.3,1)',
+                boxShadow: isActive ? '' : '0 4px 14px rgba(0,0,0,0.5)',
+              }}
+            >
+              <img src={s.image} alt={`Slide ${idx + 1}`} className="w-full h-full object-cover" />
+              <motion.div
+                className="absolute bottom-0 left-0 right-0 bg-red-500"
+                style={{ height: 2 }}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: isActive ? 1 : 0 }}
+                transition={{ duration: 0.4 }}
+              />
+            </button>
           );
         })}
       </div>
 
-      {/* ── Mobile Floating Instant Call Button ──────────────────────────────── */}
+      {/* MOBILE RING DOTS */}
+      <div className="absolute bottom-[76px] left-1/2 -translate-x-1/2 z-30 flex items-center gap-0.5 lg:hidden">
+        {slides.map((s, idx) => (
+          <RingDot
+            key={s.id}
+            active={idx === current}
+            onClick={() => goTo(idx)}
+            label={`Slide ${idx + 1}`}
+            dur={SLIDE_DURATION}
+          />
+        ))}
+      </div>
+
+      {/* MOBILE SWIPE HINT */}
+      <div className="absolute bottom-[108px] right-5 z-30 flex items-center gap-1.5 pointer-events-none lg:hidden">
+        <span className="hero-swipe-hint text-[9px] font-semibold tracking-widest uppercase text-white/35">Swipe</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="hero-swipe-hint text-white/35">
+          <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
+
+      {/* BOTTOM SEPARATOR LINE */}
+      <div className="absolute bottom-[60px] left-0 right-0 z-20 pointer-events-none flex items-center">
+        <div className="w-14 sm:w-20 h-px bg-gradient-to-r from-transparent to-white/15" />
+        <div className="flex-1 h-px bg-white/08" style={{ background: 'rgba(255,255,255,0.08)' }} />
+        <div className="w-14 sm:w-20 h-px bg-gradient-to-l from-transparent to-white/15" />
+      </div>
+
+      {/* RED PROGRESS BAR */}
+      <div className="absolute bottom-0 left-0 right-0 z-30 h-[3px]" style={{ background: 'rgba(0,0,0,0.18)' }}>
+        <motion.div
+          key={progressKey}
+          initial={{ width: '0%' }}
+          animate={{ width: '100%' }}
+          transition={{ duration: SLIDE_DURATION / 1000, ease: 'linear' }}
+          style={{ height: '100%', background: `linear-gradient(90deg, ${slide.accent}, #f87171)` }}
+        />
+      </div>
+
+      {/* DESKTOP ARROWS */}
+      {[-1, 1].map((d) => {
+        const isNext = d === 1;
+        return (
+          <motion.button
+            key={d}
+            whileHover={{ scale: 1.12, backgroundColor: 'rgba(220,38,38,0.22)' }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => { advance(d); resetTimer(); }}
+            aria-label={isNext ? 'Next slide' : 'Previous slide'}
+            className="hidden md:flex absolute top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full items-center justify-center focus:outline-none"
+            style={{
+              [isNext ? 'right' : 'left']: isNext ? '6.5rem' : '5rem',
+              background: 'rgba(0,0,0,0.3)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              backdropFilter: 'blur(12px)',
+            }}
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" className="text-white">
+              <path
+                d={isNext ? 'M9 18l6-6-6-6' : 'M15 18l-6-6 6-6'}
+                stroke="currentColor" strokeWidth="2.2"
+                strokeLinecap="round" strokeLinejoin="round"
+              />
+            </svg>
+          </motion.button>
+        );
+      })}
+
+      {/* MOBILE CALL BUTTON */}
       <a
         href="tel:+918692943939"
-        className="hero-call-btn fixed bottom-6 right-4 z-50 lg:hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-white text-xs font-semibold shadow-2xl"
+        className="hero-call-btn fixed bottom-6 right-4 z-50 lg:hidden inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-xs font-semibold shadow-2xl"
         style={{
           background: 'linear-gradient(135deg, #8B1A1A 0%, #c0392b 100%)',
-          border: '1px solid rgba(255,255,255,0.3)',
+          border: '1px solid rgba(255,255,255,0.28)',
         }}
         aria-label="Call Hindustan Cabin"
       >
-        <Phone className="w-3.5 h-3.5 text-white" />
+        <Phone className="w-3.5 h-3.5" />
         <span>Call Now</span>
       </a>
+
+      {/* PRELOAD next image */}
+      <img src={slides[nextIdx].image} alt="" aria-hidden="true" className="hidden" />
     </section>
   );
 }
