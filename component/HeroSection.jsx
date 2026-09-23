@@ -247,7 +247,7 @@ export default function HeroSection() {
       </div>
 
       {/* ═══ HERO CONTENT — label + title + CTA ════════════════════════════════ */}
-      <div className="absolute bottom-[148px] sm:bottom-[160px] left-5 sm:left-10 z-30 max-w-xs sm:max-w-md lg:max-w-lg">
+      <div className="absolute bottom-[165px] sm:bottom-[185px] lg:bottom-[200px] left-5 sm:left-14 lg:left-16 z-30 max-w-xs sm:max-w-md lg:max-w-lg">
         <AnimatePresence mode="wait">
           <motion.div
             key={`content-${slide.id}`}
@@ -308,7 +308,7 @@ export default function HeroSection() {
       </div>
 
       {/* MAGAZINE COUNTER — bottom left */}
-      <div className="absolute bottom-[76px] sm:bottom-[84px] left-5 sm:left-10 z-30 flex items-end gap-2.5 pointer-events-none">
+      <div className="absolute bottom-[76px] sm:bottom-[84px] left-5 sm:left-14 lg:left-16 z-30 flex items-end gap-2.5 pointer-events-none">
         <div className="overflow-hidden leading-none">
           <AnimatePresence mode="wait">
             <motion.span
@@ -421,9 +421,9 @@ export default function HeroSection() {
             aria-label={isNext ? 'Next slide' : 'Previous slide'}
             className="hidden md:flex absolute top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full items-center justify-center focus:outline-none"
             style={{
-              [isNext ? 'right' : 'left']: isNext ? '6.5rem' : '5rem',
-              background: 'rgba(0,0,0,0.3)',
-              border: '1px solid rgba(255,255,255,0.15)',
+              [isNext ? 'right' : 'left']: isNext ? '1.5rem' : '1.5rem',
+              background: 'rgba(0,0,0,0.4)',
+              border: '1px solid rgba(255,255,255,0.2)',
               backdropFilter: 'blur(12px)',
             }}
           >
