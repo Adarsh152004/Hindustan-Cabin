@@ -1,15 +1,32 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Phone } from 'lucide-react';
+import { Phone, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
-// Slides - pure imagery, zero text
+// Slides — content per slide
 const slides = [
-  { id: 1, image: '/images/hero-bg-1.jpg', kenClass: 'hero-ken-1', accent: '#dc2626' },
-  { id: 2, image: '/images/hero-bg-2.jpg', kenClass: 'hero-ken-2', accent: '#b91c1c' },
-  { id: 3, image: '/images/hero-bg-3.jpg', kenClass: 'hero-ken-3', accent: '#dc2626' },
-  { id: 4, image: '/images/hero2.png',     kenClass: 'hero-ken-4', accent: '#ef4444' },
+  {
+    id: 1, image: '/images/hero-bg-1.jpg', kenClass: 'hero-ken-1', accent: '#dc2626',
+    label: 'Direct Manufacturer · Mumbai & Thane',
+    title: 'Portable Cabins & Site Offices',
+  },
+  {
+    id: 2, image: '/images/hero-bg-2.jpg', kenClass: 'hero-ken-2', accent: '#b91c1c',
+    label: 'Heavy-Duty Industrial Fabrication',
+    title: 'Prefabricated Storage Containers',
+  },
+  {
+    id: 3, image: '/images/hero-bg-3.jpg', kenClass: 'hero-ken-3', accent: '#dc2626',
+    label: 'Turnkey Commercial Workspaces',
+    title: 'Modular Container Offices',
+  },
+  {
+    id: 4, image: '/images/hero2.png',     kenClass: 'hero-ken-4', accent: '#ef4444',
+    label: 'Reliable Site Infrastructure',
+    title: 'Security Cabins & Guard Posts',
+  },
 ];
 
 const SLIDE_DURATION = 5000;
@@ -227,6 +244,67 @@ export default function HeroSection() {
         <div className="w-px h-20 bg-gradient-to-b from-transparent via-red-600/60 to-transparent" />
         <div className="w-1.5 h-1.5 rounded-full bg-red-600/80" />
         <div className="w-px h-12 bg-gradient-to-b from-red-600/40 to-transparent" />
+      </div>
+
+      {/* ═══ HERO CONTENT — label + title + CTA ════════════════════════════════ */}
+      <div className="absolute bottom-[148px] sm:bottom-[160px] left-5 sm:left-10 z-30 max-w-xs sm:max-w-md lg:max-w-lg">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`content-${slide.id}`}
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{    opacity: 0, y: -14 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {/* Small uppercase label with red dot */}
+            <motion.p
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.08, duration: 0.4, ease: 'easeOut' }}
+              className="flex items-center gap-2 text-[11px] sm:text-xs font-semibold tracking-widest uppercase text-white/65 mb-2"
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                style={{ background: slide.accent, boxShadow: `0 0 6px ${slide.accent}` }}
+              />
+              {slide.label}
+            </motion.p>
+
+            {/* Bold slide title */}
+            <motion.h1
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.16, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="font-black text-white leading-tight mb-4"
+              style={{
+                fontSize: 'clamp(1.5rem, 4.5vw, 2.6rem)',
+                textShadow: '0 2px 24px rgba(0,0,0,0.55)',
+              }}
+            >
+              {slide.title}
+            </motion.h1>
+
+            {/* CTA button */}
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.26, duration: 0.4, ease: 'easeOut' }}
+            >
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-xs sm:text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg"
+                style={{
+                  background: `linear-gradient(135deg, ${slide.accent} 0%, #c0392b 100%)`,
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  boxShadow: `0 4px 18px ${slide.accent}55`,
+                }}
+              >
+                Get a Free Quote
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* MAGAZINE COUNTER — bottom left */}
